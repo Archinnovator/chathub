@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussion Forum with Live Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .tab { overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; }
+        .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; }
+        .tab button:hover { background-color: #ddd; }
+        .tab button.active { background-color: #ccc; }
+        .tabcontent { display: none; padding: 6px 12px; border: 1px solid #ccc; border-top: none; }
+        #chatMessages, #forumPosts { height: 300px; overflow-y: auto; margin-bottom: 10px; }
+        input[type="text"] { width: 70%; padding: 5px; }
+        button { padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <h1>Learning Hub</h1>
+    
+    <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'Forum')">Forum</button>
+        <button class="tablinks" onclick="openTab(event, 'Chat')">Live Chat</button>
+    </div>
+
+    <div id="Forum" class="tabcontent" style="display: block;">
+        <h2>Discussion Forum</h2>
+        <div id="forumPosts"></div>
+        <input type="text" id="newPost" placeholder="New discussion topic">
+        <button onclick="addForumPost()">Post</button>
+    </div>
+
+    <div id="Chat" class="tabcontent">
+        <h2>Live Chat</h2>
+        <div id="chatMessages"></div>
+        <input type="text" id="newMessage" placeholder="Type a message">
+        <button onclick="sendChatMessage()">Send</button>
+    </div>
+
+    <script>
+        let forumPosts = [
+            { id: 1, title: "Understanding the Fundaments of AI", author: "Ali", replies: 5 },
+            { id: 2, title: "Best practices for Prompt Engineering", author: "Paul", replies: 3 }
+        ];
+        let chatMessages = [
+            { id: 1, author: "Ali", message: "Hey everyone, ready for the group discussion?" },
+            { id: 2, author: "Paul", message: "Yes, I'm here!" }
+        ];
+
+        function openTab(evt, tabName) {
+            let tabcontent = document.getElementsByClassName("tabcontent");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            let tablinks = document.getElementsByClassName("tablinks");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        function addForumPost() {
+            let newPostInput = document.getElementById("newPost");
+            if (newPostInput.value.trim()) {
+                forumPosts.push({ id: forumPosts.length + 1, title: newPostInput.value, author: "You", replies: 0 });
+                newPostInput.value = "";
+                updateForumPosts();
+            }
+        }
+
+        function sendChatMessage() {
+            let newMessageInput = document.getElementById("newMessage");
+            if (newMessageInput.value.trim()) {
+                chatMessages.push({ id: chatMessages.length + 1, author: "You", message: newMessageInput.value });
+                newMessageInput.value = "";
+                updateChatMessages();
+            }
+        }
+
+        function updateForumPosts() {
+            let forumPostsDiv = document.getElementById("forumPosts");
+            forumPostsDiv.innerHTML = forumPosts.map(post => 
+                `<div>
+                    <h3>${post.title}</h3>
+                    <p>Posted by: ${post.author} | Replies: ${post.replies}</p>
+                </div>`
+            ).join('');
+        }
+
+        function updateChatMessages() {
+            let chatMessagesDiv = document.getElementById("chatMessages");
+            chatMessagesDiv.innerHTML = chatMessages.map(msg => 
+                `<p><strong>${msg.author}:</strong> ${msg.message}</p>`
+            ).join('');
+            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+        }
+
+        // Initial update
+        updateForumPosts();
+        updateChatMessages();
+    </script>
+</body>
+</html>
+
